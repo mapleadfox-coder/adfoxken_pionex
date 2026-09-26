@@ -1,0 +1,39 @@
+name: Pionex Contract Price Alert
+
+on:
+  schedule:
+    # 台北時間(UTC+8)每天 06:00~23:59,每 15 分鐘執行一次
+    # 換算成 UTC:22:00(前一天)~ 15:59(當天),因跨過 UTC 午夜分成兩段 hour 範圍
+    # GitHub 排程有時會延遲幾分鐘,屬正常現象
+    - cron: "*/15 0-15,22,23 * * *"
+  workflow_dispatch: {}   # 允許手動點擊執行,方便測試
+
+permissions:
+  contents: write   # 需要寫入權限,才能把 state.json 的更新推回 repo
+
+jobs:
+  check-alerts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run alert script
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python fetch_and_alert.py
+
+      - name: Commit updated state.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add state.json
+          git diff --staged --quiet || git commit -m "Update price state [skip ci]"
+          git push
