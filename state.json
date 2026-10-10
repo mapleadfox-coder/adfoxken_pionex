@@ -610,12 +610,12 @@
     "CC_USDT_PERP": 0.10976
   },
   "last_run": "2026-09-06T13:05:14.229942+00:00",
-  "last_run_utc": "2026-10-10T09:56:35.227419+00:00",
-  "last_match_count": 7,
+  "last_run_utc": "2026-10-10T10:15:13.943013+00:00",
+  "last_match_count": 4,
   "last_run_intervals": [
     "60M"
   ],
-  "last_60m_boundary_ms": 1791619200000,
+  "last_60m_boundary_ms": 1791622800000,
   "last_4h_boundary_ms": 1791604800000,
   "last_1d_boundary_ms": 1791504000000
 }
